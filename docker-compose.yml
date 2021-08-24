@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  # フロントアプリの設定
+  front-app:
+    container_name: front-app
+    build:
+      context: ./
+      dockerfile: ./docker/front-app/Dockerfile
+    #command: npm run dev
+    # 環境変数
+    environment:
+      NODE_ENV: development
+    # ポートフォワード
+    # <Host IP>:<Host Port>:<Container Port>
+    ports:
+      - '3000:3000'
+    # ホストファイルのマウント
+    volumes:
+    # <Host>:<Container>
+      - ./front-app/:/front-app/
+    # コンテナを立ち上げたまま継続させる
+    tty: true
+  # サーバーアプリの設定
+  server-app:
+    container_name: server-app
+    build:
+      context: .
+      dockerfile: ./docker/server-app/Dockerfile
+    command: npm run start:dev
+    environment:
+      NODE_ENV: development
+    ports:
+      - '3300:3300'
+    volumes:
+      - ./server-app/:/server-app/
+    tty: true
+  # DBの設定
+  db-mysql80:
+    container_name: db-mysql80
+    image: mysql:8.0
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+    - ./docker/db/data:/var/lib/mysql
+    - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+    - ./docker/db/sql:/docker-entrypoint-initdb.d
+  # phpMyAdminの設定
+  phpmyadmin:
+    container_name: mysql80-phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    # PMA_HOSTSはdbコンテナ名に合わせる
+    environment:
+    - PMA_ARBITRARY=1
+    - PMA_HOSTS=db-mysql80
+    - PMA_USER=root
+    - PMA_PASSWORD=root
+    ports:
+    - 8080:80
