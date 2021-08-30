@@ -207,3 +207,17 @@ https://www.chuken-engineer.com/entry/2020/09/04/074216
 https://qiita.com/techneconn/items/012bdf1b9ff3881546b3  
 https://qiita.com/ozoneboy/items/e530c59277c1f4ae0b7e  
 https://stackoverflow.com/questions/63445821/ts-node-execute-typescript-with-module-import-and-module-defined
+
+## expressを使う場合
+ ` express-generator-typescript `を利用する場合は以下の流れで。  
+https://www.npmjs.com/package/express-generator-typescript  
+
+- インストール
+```
+npm install -g express-generator-typescript  
+```
+
+- PJ作成
+```
+npx express-generator-typescript "server-app" with all options
+```
