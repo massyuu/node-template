@@ -1,6 +1,6 @@
-import { Request, Response } from "express"
+import { Request, Response } from 'express'
 
 /* GET users listing. */
-export const index = (req: Request, res: Response) => {
-  res.send('respond with a resource');
+export const index = (req: Request, res: Response): void => {
+  res.send('respond with a resource')
 }
